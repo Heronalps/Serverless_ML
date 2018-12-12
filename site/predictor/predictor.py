@@ -15,6 +15,7 @@ warnings.filterwarnings(action='ignore', module='scipy', message='^internal gels
 LOWER_BOUND = time.strptime("2018-04-06 00:00:00.000000","%Y-%m-%d %H:%M:%S.%f")
 UPPER_BOUND = time.strptime("2018-12-09 00:00:00.000000","%Y-%m-%d %H:%M:%S.%f")
 TIMESTAMP_COLUMN = 'dt'
+local_repo = os.path.join(os.path.sep, "tmp", os.path.basename('csv'))
 
 client = boto3.client('s3')
 
@@ -46,7 +47,9 @@ def read_csv(file_name):
 # If the dataset is oversized, this function should load datset onto
 # memory and operate.
 def read_csv_s3(file_name):
-    path = './tmp/' + file_name
+    if not os.path.exists(local_repo):
+        os.makedirs(local_repo)
+    path = local_repo + file_name
     print("========================")
     print(path)
     print("========================")

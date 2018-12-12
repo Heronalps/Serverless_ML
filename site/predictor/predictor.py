@@ -22,6 +22,12 @@ TIMESTAMP_COLUMN = 'dt'
 # event['variable_files'] = ['pizero_02.csv', 'pizero_02_2.csv', 'pizero_04.csv', 'pizero_05.csv', 'pizero_06.csv']
 # event['target_file'] = 'pizero_02_dht.csv'
 
+# Test Event
+# {
+#   "variable_files": "[\"pizero_02.csv\",\"pizero_02_2.csv\",\"pizero_04.csv\", \"pizero_05.csv\", \"pizero_06.csv\"]",
+#   "target_file": "pizero_02_dht.csv"
+# }
+
 # This function shows the time range of a certain time series
 def show_time_range(df, column):
     print("The time range of data frame is from {0} to {1}.".format(df[column].iloc[0], df[column].iloc[-1]))
@@ -57,7 +63,7 @@ def merge_df(column, df_base, df_dict):
     return df_base
 
 
-def lambda_handler(context, event):
+def lambda_handler(event, context):
     variable_files = event['variable_files']
     target_file = event['target_file']
     df_dict = {}

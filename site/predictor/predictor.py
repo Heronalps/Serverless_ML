@@ -5,8 +5,7 @@ The multivariate regression based on certain number of CPU temperature time seri
 # import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import re
-import time
+import re, time, boto3, os
 from subprocess import check_output
 from sklearn import datasets, linear_model
 from sklearn.metrics import mean_squared_error, r2_score
@@ -16,6 +15,8 @@ warnings.filterwarnings(action='ignore', module='scipy', message='^internal gels
 LOWER_BOUND = time.strptime("2018-04-06 00:00:00.000000","%Y-%m-%d %H:%M:%S.%f")
 UPPER_BOUND = time.strptime("2018-12-09 00:00:00.000000","%Y-%m-%d %H:%M:%S.%f")
 TIMESTAMP_COLUMN = 'dt'
+
+client = boto3.client('s3')
 
 # context = {}
 # event = {}
@@ -38,6 +39,17 @@ def read_csv(file_name):
     path_prefix = re.sub(r'predictor\n', r'/datasets', check_output(['pwd']).decode('utf-8'))
     df = pd.read_csv(path_prefix + '/' + file_name)
     # show_time_range(df, 'dt')
+    return df
+
+# This function read csv file from S3 bucket
+# Currently the csv file is downloaded to persistent storage
+# If the dataset is oversized, this function should load datset onto
+# memory and operate.
+def read_csv_s3(file_name):
+    path = './tmp/' + file_name
+    bucket = 'temp-predictor'
+    client.download_file(bucket, file_name, path)
+    df = pd.read_csv(path)
     return df
 
 
@@ -68,14 +80,14 @@ def lambda_handler(event, context):
     target_file = event['target_file']
     df_dict = {}
     
-    df_target = read_csv(target_file)
+    df_target = read_csv_s3(target_file)
     df_target = convert_timestamp(df_target, TIMESTAMP_COLUMN)
     
     # Drop the last column of humidity without specifying the column name
     df_target.drop(df_target.columns[len(df_target.columns) - 1], axis=1, inplace=True)
 
     for file_name in variable_files:
-        df_temp = read_csv(file_name)
+        df_temp = read_csv_s3(file_name)
         name = re.sub('\.csv', '', file_name)
         df_dict[name] = convert_timestamp(df_temp, TIMESTAMP_COLUMN)
 

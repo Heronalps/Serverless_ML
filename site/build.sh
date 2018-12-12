@@ -12,10 +12,10 @@ rm -f lambda_function.zip
 zip -rj9 lambda_function.zip ./predictor/predictor.py 
 
 cd $path1
-zip -ur $current_path/lambda_function.zip numpy/ matplotlib/ pandas/ scipy/ sklearn/
+zip -ur $current_path/lambda_function.zip pandas/ sklearn/
 
 cd $path2
-zip -ur $current_path/lambda_function.zip pyparsing.py six.py pytz/
+zip -ur $current_path/lambda_function.zip pyparsing.py six.py cycler.py pytz/ dateutil/
 
 cd $current_path
 echo 'Complete packaging lambda function'

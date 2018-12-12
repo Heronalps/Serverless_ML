@@ -2,7 +2,7 @@
 The multivariate regression based on certain number of CPU temperature time series. 
 
 """
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import re
@@ -17,10 +17,10 @@ LOWER_BOUND = time.strptime("2018-04-06 00:00:00.000000","%Y-%m-%d %H:%M:%S.%f")
 UPPER_BOUND = time.strptime("2018-12-09 00:00:00.000000","%Y-%m-%d %H:%M:%S.%f")
 TIMESTAMP_COLUMN = 'dt'
 
-context = {}
-event = {}
-event['variable_files'] = ['pizero_02.csv', 'pizero_02_2.csv', 'pizero_04.csv', 'pizero_05.csv', 'pizero_06.csv']
-event['target_file'] = 'pizero_02_dht.csv'
+# context = {}
+# event = {}
+# event['variable_files'] = ['pizero_02.csv', 'pizero_02_2.csv', 'pizero_04.csv', 'pizero_05.csv', 'pizero_06.csv']
+# event['target_file'] = 'pizero_02_dht.csv'
 
 # This function shows the time range of a certain time series
 def show_time_range(df, column):
@@ -55,7 +55,6 @@ def merge_df(column, df_base, df_dict):
         df_base = pd.merge(df_base, df_dict[df_name], how='inner', on=['dt'], suffixes=['_1', '_2'])
         # print(df_base.head(5))
     return df_base
-
 
 
 def lambda_handler(context, event):
@@ -101,5 +100,5 @@ def lambda_handler(context, event):
     print("The R Square of regression is {0}".format(r2_score(df_test_Y, df_prediction_Y)))
     print("==============================================================")
 
-if __name__ == "__main__":
-    lambda_handler(context, event)
+# if __name__ == "__main__":
+#     lambda_handler(context, event)

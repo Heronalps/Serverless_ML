@@ -47,6 +47,9 @@ def read_csv(file_name):
 # memory and operate.
 def read_csv_s3(file_name):
     path = './tmp/' + file_name
+    print("========================")
+    print(path)
+    print("========================")
     bucket = 'temp-predictor'
     client.download_file(bucket, file_name, path)
     df = pd.read_csv(path)
@@ -78,6 +81,9 @@ def merge_df(column, df_base, df_dict):
 def lambda_handler(event, context):
     variable_files = event['variable_files']
     target_file = event['target_file']
+    print("========================")
+    print(target_file)
+    print("========================")
     df_dict = {}
     
     df_target = read_csv_s3(target_file)

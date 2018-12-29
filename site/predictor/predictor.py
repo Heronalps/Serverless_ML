@@ -5,7 +5,7 @@ The multivariate regression based on certain number of CPU temperature time seri
 # import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import re, time, boto3, os
+import re, time, boto3, os, json
 from subprocess import check_output
 from sklearn import datasets, linear_model
 from sklearn.metrics import mean_squared_error, r2_score
@@ -42,17 +42,14 @@ def read_csv(file_name):
     # show_time_range(df, 'dt')
     return df
 
-# This function read csv file from S3 bucket
+# This function read csv file from S3 bucket.
 # Currently the csv file is downloaded to persistent storage
-# If the dataset is oversized, this function should load datset onto
-# memory and operate.
+# If the dataset is oversized, this function should load datset onto memory and operate.
+# path has to be constructed by os.path.join, otherwise it will be appended random str.
 def read_csv_s3(file_name):
     if not os.path.exists(local_repo):
         os.makedirs(local_repo)
     path = local_repo + '/' + file_name
-    print("========================")
-    print(path)
-    print("========================")
     bucket = 'temp-predictor'
     client.download_file(bucket, file_name, path)
     df = pd.read_csv(path)
